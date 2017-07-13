@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src='https://unpkg.com/vue'></script>
+</head>
+
+<body>
+    <div id="app" class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }">
+        bind class
+    </div>
+
+    <div id="app2" v-bind:class="objectClass">
+        bind class object
+    </div>
+
+    <div id="app3" v-bind:class="[activeClass, errorClass]">
+        bind class 数组
+    </div>
+
+    <div id='app4' v-bind:class="[isActive ? activeClass : '', errorClass]">
+        根据条件切换列表中的 class ，可以用三元表达式
+    </div>
+
+    <div id="app5" v-bind:class="[{ active: isActive }, errorClass]">
+        在数组语法中使用对象语法
+    </div>
+
+    <div id="app6">
+        <my-component class="baz boo"></my-component>
+    </div>
+
+</body>
+<script>
+    //对象语法
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            isActive: true,
+            hasError: false
+        }
+    });
+
+    var vm2 = new Vue({
+        el: "#app2",
+        data: {
+            objectClass: {
+                active: true,
+                'text-danger': true
+            }
+        }
+    })
+
+    var vm3 = new Vue({
+        el: "#app3",
+        data: {
+            activeClass: 'active',
+            errorClass: 'text-danger'
+        }
+    });
+
+    var vm4 = new Vue({
+        el: "#app4",
+        data: {
+            isActive: false,
+            activeClass: 'active',
+            errorClass: 'text-danger'
+        }
+    });
+
+    var vm5 = new Vue({
+        el: "#app5",
+        data: {
+            isActive: true,
+            errorClass: 'text-danger'
+        }
+    });
+
+    Vue.component('my-component', {
+        template: '<p class="foo bar"><span>Hi</span></p>'
+    })
+
+    var vm6 = new Vue({
+        el: '#app6'
+    })
+
+</script>
+
+</html>

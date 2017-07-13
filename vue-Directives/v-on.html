@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src='https://unpkg.com/vue'></script>
+</head>
+
+<body>
+    <div id="example-1">
+        <button v-on:click="counter += 1">增加 1</button>
+        <p>这个按钮被点击了 {{ counter }} 次。</p>
+    </div>
+
+    <div id="example-2">
+        <!-- `greet` 是在下面定义的方法名 -->
+        <button v-on:click="greet">Greet</button>
+    </div>
+
+    <div id="example-3">
+        <button v-on:click="say('hi')">Say hi</button>
+        <button v-on:click="say('what')">Say what</button>
+    </div>
+
+    <div id="example-4">
+        <button v-on:click="warn('Form cannot be submitted yet.', $event)">
+            Submit
+        </button>
+    </div>
+
+    <div id="example-5" v-on:click="doDiv" v-on:click.self="doSelf" v-on:click.capture="doCapture($event)">
+
+        <!-- 单击事件 -->
+        <a v-on:click="doThis"> v-on:click </a> <br/>
+        <!-- 阻止单击事件冒泡 -->
+        <a v-on:click.stop="doThis"> v-on:click.stop </a>
+        <!-- 提交事件重载页面 -->
+        <form><button type="submit">v-on:submit</button></form>
+        <!-- 提交事件不再重载页面 -->
+        <form v-on:submit.prevent="onSubmit"><button type="submit">v-on:submit.prevent</button></form>
+        <!-- 修饰符可以串联  -->
+        <a v-on:click.stop.prevent="doThat">v-on:click.stop.prevent</a>
+        <!-- 添加事件侦听器时使用事件捕获模式 -->
+        <div v-on:click.capture="doCapture($event)">v-on:click.capture...</div>
+        <!-- 只当事件在该元素本身（比如不是子元素）触发时触发回调 -->
+        <div v-on:click.self="doThat">...</div>
+
+        <!-- 点击事件将只会触发一次 -->
+        <a v-on:click.once="doThis">v-on:click.once</a>
+    </div>
+
+    <div id="example-6">
+        <input v-on:keyup.13="submit">
+        <input v-on:keyup.enter="submit">
+        <input @keyup.enter="submit">
+
+
+        <!-- Alt + C -->
+        <input @keyup.alt.67="clear">
+        <!-- Ctrl + Click -->
+        <div @click.ctrl="doSomething">Do something</div>
+
+    </div>
+
+
+</body>
+<script>
+    var example1 = new Vue({
+        el: '#example-1',
+        data: {
+            counter: 0
+        }
+    })
+
+    var example2 = new Vue({
+        el: '#example-2',
+        data: {
+            name: 'Vue.js'
+        },
+        // 在 `methods` 对象中定义方法
+        methods: {
+            greet: function (event) {
+                // `this` 在方法里指当前 Vue 实例
+                alert('Hello ' + this.name + '!')
+                // `event` 是原生 DOM 事件
+                if (event) {
+                    alert(event.target.tagName)
+                }
+            }
+        }
+    })
+
+    // 也可以用 JavaScript 直接调用方法
+    //example2.greet() // -> 'Hello Vue.js!'
+
+    new Vue({
+        el: '#example-3',
+        methods: {
+            say: function (message) {
+                alert(message)
+            }
+        }
+    })
+
+
+    new Vue({
+        el: '#example-4',
+        methods: {
+            warn: function (message, event) {
+                // 现在我们可以访问原生事件对象
+                if (event) event.preventDefault()
+                alert(message)
+            }
+        }
+    })
+
+    new Vue({
+        el: '#example-5',
+        methods: {
+            doDiv: function () {
+                alert("doDiv......");
+            },
+            doThis: function () {
+                alert("doThis.......");
+            },
+            onSubmit: function () {
+                alert("onSubmit......");
+            },
+            doThat: function () {
+                alert("doThat.....")
+            },
+            doSelf: function () {
+                alert("doSelf....");
+            },
+            doCapture: function (event) {
+                var target = event.currentTarget;
+                console.log(target);
+            }
+        }
+    })
+
+    new Vue({
+        el: '#example-6',
+        methods: {
+            submit: function () {
+                alert("submit......");
+            },
+
+            clear: function () {
+                alert("clear......");
+            },
+        }
+    })
+
+</script>
+
+</html>

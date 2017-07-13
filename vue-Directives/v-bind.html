@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src='https://unpkg.com/vue'></script>
+</head>
+
+<body>
+    <div id="app" class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }">
+        bind class
+    </div>
+
+    <div id="app2" v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }">
+        bind style
+    </div>
+
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            isActive: true,
+            hasError: false
+        }
+    });
+
+    new Vue({
+        el: "#app2",
+        data:{
+            activeColor: 'red',
+            fontSize: 16
+        }
+    })
+</script>
+
+</html>

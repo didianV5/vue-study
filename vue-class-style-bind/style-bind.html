@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src='https://unpkg.com/vue'></script>
+</head>
+
+<body>
+    <div id="app" v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }">
+        bind style
+    </div>
+
+    <div id="app2" v-bind:style="styleObject">
+        bind style styleObject
+    </div>
+
+    <div id="app3" v-bind:style="[baseStyles, overridingStyles]">
+        bind style 数组
+    </div>
+
+    <div style="transform:rotate(9deg)">
+asdasdasda
+    </div>
+
+<div id="app4" v-bind:style="[baseStyles]">
+        bind style 数组 transform
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            activeColor: 'red',
+            fontSize: 30
+        }
+    });
+
+    var vm2 = new Vue({
+        el: "#app2",
+        data: {
+            styleObject: {
+                color: 'red',
+                fontSize: '16px'
+            }
+        }
+    });
+
+    var vm3 = new Vue({
+        el: "#app3",
+        data: {
+            baseStyles: {
+                color: 'red',
+                fontSize: '16px'
+            },
+            overridingStyles: {
+                margin: '10px'
+            }
+        }
+    });
+
+    var vm4 = new Vue({
+        el: '#app4',
+        data: {
+            baseStyles: {
+                margin: '30px',
+                width: '200px',
+                height: '100px',
+                display: ['-webkit-box', '-ms-flexbox'],
+                backgroundColor:'yellow',
+                /* Rotate div */
+                transform: 'rotate(9deg)'
+            }
+        }
+    })
+
+</script>
+
+</html>

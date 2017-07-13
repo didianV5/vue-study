@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src='https://unpkg.com/vue'></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1 v-if="ok">Yes</h1>
+        <h1 v-else>No</h1>
+    </div>
+
+    <div id="app2">
+        <div v-if="type === 'A'">
+            A
+        </div>
+        <div v-else-if="type === 'B'">
+            B
+        </div>
+        <div v-else-if="type === 'C'">
+            C
+        </div>
+        <div v-else>
+            Not A/B/C
+        </div>
+    </div>
+
+    <div id="app3">
+        <template v-if="loginType === 'username'">
+            <label>Username</label>
+            <input placeholder="Enter your username">
+        </template>
+        <template v-else>
+            <label>Email</label>
+            <input placeholder="Enter your email address">
+        </template>
+        <button v-on:click='changeType'> 切换</button>
+    </div>
+
+    <div id="app4">
+        <template v-if="loginType === 'username'">
+            <label>Username</label>
+            <input placeholder="Enter your username" key="username-input">
+        </template>
+        <template v-else>
+            <label>Email</label>
+            <input placeholder="Enter your email address" key="email-input">
+        </template>
+        <button v-on:click='changeType'> 切换</button>
+    </div>
+
+    <div id="app5">
+        <h1 v-show="ok">Hello!</h1>
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            ok: true,
+        }
+    });
+
+    var vm2 = new Vue({
+        el: "#app2",
+        data: {
+            type: true,
+        }
+    });
+
+    var vm3 = new Vue({
+        el: "#app3",
+        data: {
+            loginType: 'username',
+        },
+        methods: {
+            changeType: function () {
+                this.loginType = this.loginType === 'username' ? 'email' : 'username'
+            }
+        }
+    });
+
+    var vm4 = new Vue({
+        el: "#app4",
+        data: {
+            loginType: 'username',
+        },
+        methods: {
+            changeType: function () {
+                this.loginType = this.loginType === 'username' ? 'email' : 'username'
+            }
+        }
+    });
+
+    var vm5 = new Vue({
+        el: "#app5",
+        data: {
+            ok: true,
+        }
+    });
+
+</script>
+
+</html>
