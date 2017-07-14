@@ -1,0 +1,337 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src='https://unpkg.com/vue'></script>
+    <style>
+        div {
+            margin-top: 20px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="counter-event-example">
+        <p>{{ total }}</p>
+        <button-counter v-on:increment="incrementTotal"></button-counter>
+        <button-counter v-on:increment="incrementTotal"></button-counter>
+    </div>
+
+    <div id="example-1">
+        <my-component v-on:click.native="doTheThing"></my-component>
+    </div>
+
+    <div id="example-2">
+        <comp :foo.sync="bar"></comp> bar: {{bar}}
+    </div>
+
+
+    <div id="example-3">
+        <currency-input label="Price" v-model="price"></currency-input>
+        <currency-input label="Shipping" v-model="shipping"></currency-input>
+        <currency-input label="Handling" v-model="handling"></currency-input>
+        <currency-input label="Discount" v-model="discount"></currency-input>
+        <p>Total: ${{ total }}</p>
+    </div>
+
+    <div id="example-4">
+        <input v-model='msg1' v-on:input="updateMsg($event)" />
+    </div>
+
+    <div id="example-5">
+        <span>{{message}}</span>
+    </div>
+
+    <div id="example-6">
+        <child-component>
+            <div>我在这，你在哪</div>
+        </child-component>
+    </div>
+
+    <div id="example-7">
+        <child-component2>
+            <div> message: {{message}}</div>
+        </child-component2>
+    </div>
+
+    <div id="example-8">
+        <app-layout>
+            <h1 slot="header">这里可能是一个页面标题</h1>
+            <p>主要内容的一个段落。</p>
+            <p>另一个主要段落。</p>
+            <p slot="footer">这里有一些联系信息</p>
+        </app-layout>
+    </div>
+
+    <div id="example-9" class="parent">
+        <child>
+            <template scope="props">
+                <span>hello from parent</span>
+                <span>{{ props.text }}</span>
+            </template>
+        </child>
+    </div>
+
+    <div id="example-10">
+        <component v-bind:is="currentView">
+            <!-- 组件在 vm.currentview 变化时改变！ -->
+        </component>
+    </div>
+
+    <div id="example-11">
+        <keep-alive>
+        <component v-bind:is="currentView">
+            <!-- 组件在 vm.currentview 变化时改变！ -->
+        </component>
+        </keep-alive>
+    </div>
+
+</body>
+<script>
+    Vue.component('button-counter', {
+        template: '<button v-on:click="increment22">{{ counter }}</button>',
+        data: function () {
+            return {
+                counter: 0
+            }
+        },
+        methods: {
+            increment22: function () {
+                this.counter += 1
+                console.log("button-counter-------increment")
+                this.$emit('increment')
+            }
+        },
+    })
+    new Vue({
+        el: '#counter-event-example',
+        data: {
+            total: 0
+        },
+        methods: {
+            incrementTotal: function () {
+                console.log("example-------increment")
+                this.total += 1
+            }
+        }
+    })
+
+    Vue.component('my-component', {
+        template: '<button> 点击 </button>',
+    })
+
+    new Vue({
+        el: '#example-1',
+        methods: {
+            doTheThing: function () {
+                alert("root  1111");
+            }
+        }
+    })
+
+    Vue.component('comp', {
+        props: ['foo'],
+        template: '<div><input type="text" :value="foo" @input="updateData($event)"></div>',
+        methods: {
+            updateData: function (event) {
+                this.$emit('update:foo', event.target.value)
+            }
+        }
+    })
+    var vm2 = new Vue({
+        el: '#example-2',
+        data: {
+            bar: '12312'
+        }
+    })
+
+
+    Vue.component('currency-input', {
+        template: '\
+    <div>\
+      <label v-if="label">{{ label }}</label>\
+      $\
+      <input\
+        ref="input"\
+        v-bind:value="value"\
+        v-on:input="updateValue($event.target.value)"\
+        v-on:focus="selectAll"\
+        v-on:blur="formatValue"\
+      >\
+    </div>\
+  ',
+        props: {
+            value: {
+                type: Number,
+                default: 0
+            },
+            label: {
+                type: String,
+                default: ''
+            }
+        },
+        mounted: function () {
+            this.formatValue()
+        },
+        methods: {
+            updateValue: function (value) {
+                var result = { 'value': parseInt(value) }
+                if (result.warning) {
+                    this.$refs.input.value = result.value
+                }
+                this.$emit('input', result.value)
+            },
+            formatValue: function () {
+                this.$refs.input.value = parseInt(this.value)
+            },
+            selectAll: function (event) {
+                // Workaround for Safari bug
+                // http://stackoverflow.com/questions/1269722/selecting-text-on-focus-using-jquery-not-working-in-safari-and-chrome
+                setTimeout(function () {
+                    event.target.select()
+                }, 0)
+            }
+        }
+    })
+
+    new Vue({
+        el: '#example-3',
+        data: {
+            price: 0,
+            shipping: 0,
+            handling: 0,
+            discount: 0
+        },
+        computed: {
+            total: function () {
+                return ((
+                    this.price * 100 +
+                    this.shipping * 100 +
+                    this.handling * 100 -
+                    this.discount * 100
+                ) / 100).toFixed(2)
+            }
+        }
+    })
+
+    var bus = new Vue()
+
+    new Vue({
+        el: '#example-4',
+        data: {
+            msg1: '',
+        },
+        methods: {
+            updateMsg: function (event) {
+                bus.$emit('msg-to-a', event.target.value);
+            }
+        }
+
+    })
+
+    new Vue({
+        el: '#example-5',
+        created() {
+            console.log('example-5......');
+            bus.$on('msg-to-a', msg => this.message = msg);
+        },
+        data: {
+            message: 'example-5'
+        }
+    })
+
+    Vue.component('child-component', {
+        template: '<div><h2>我是子组件的标题</h2><slot>只有在没有要分发的内容时才会显示。</slot></div>',
+    })
+
+    new Vue({
+        el: '#example-6'
+    })
+
+    Vue.component('child-component2', {
+        template: '<div><h2>我是子组件的标题</h2><slot>只有在没有要分发的内容时才会显示。</slot>message: {{message}}</div>',
+        data: function () {
+            return {
+                message: '12345678'
+            }
+        }
+    })
+
+    new Vue({
+        el: '#example-7',
+        data: {
+            message: 'parent message'
+        }
+    })
+
+    Vue.component('app-layout', {
+        template: '<div class="container">\
+  <header>\
+    <slot name="header"></slot>\
+  </header>\
+  <main>\
+    <slot></slot>\
+  </main>\
+  <footer>\
+    <slot name="footer"></slot>\
+  </footer>\
+</div>'
+    })
+
+    new Vue({
+        el: '#example-8'
+    })
+
+
+    Vue.component('child', {
+        template: '<div class="child"><slot text="hello from child"></slot></div>'
+    })
+
+    new Vue({
+        el: '#example-9'
+    })
+
+    var Home = {
+        template: '<p>Welcome home!</p>',
+    }
+
+    var Home2 = {
+        template: '<p>Welcome home2!</p>',
+    }
+
+    var Home3 = {
+        template: '<p>Welcome home3!</p>'
+    }
+
+    var vm10 = new Vue({
+        el: '#example-10',
+        data: {
+            currentView: Home
+        }
+    })
+
+    var Home11 = {
+        template: '<p>Welcome home11!</p>',
+        created(){
+            console.log('fetch data home11')
+        }
+    }
+
+    var Home22 = {
+        template: '<p>Welcome home22!</p>',
+        created(){
+            console.log('fetch data home22')
+        }
+    }
+
+
+    var vm11 = new Vue({
+        el: '#example-11',
+        data: {
+            currentView: Home11
+        }
+    })
+
+</script>
+
+</html>
